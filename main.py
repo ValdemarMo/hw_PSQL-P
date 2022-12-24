@@ -75,7 +75,7 @@ def find_client(conn, **data):
     return conn.fetchall()
 
 def all_client_phone(conn):
-    q = "SELECT distinct(email), first_name, last_name, phone FROM clients c  \
+    q = "SELECT email, first_name, last_name, phone FROM clients c  \
         LEFT JOIN phones p ON c.id = p.client_id"
     conn.execute(q)
     return conn.fetchall()
