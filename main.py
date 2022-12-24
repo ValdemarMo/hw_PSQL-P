@@ -1,5 +1,4 @@
 import psycopg2
-
 def create_db(conn):
     conn.execute("""
         CREATE TABLE IF NOT EXISTS clients(
