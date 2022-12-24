@@ -68,16 +68,15 @@ def delete_client(conn, client_id):
                    """, (client_id))
 
 def find_client(conn, **data):
-    q = "SELECT first_name, last_name, email, p.phone FROM clients c \
-            JOIN phones p ON c.id = p.client_id \
-            WHERE " + ' and '.join(f"{x1} like '{x2}'" for x1, x2 in data.items())
+    q = "SELECT first_name, last_name, email, phone FROM clients c \
+        LEFT JOIN phones p ON c.id = p.client_id \
+        WHERE " + ' and '.join(f"{x1} like '{x2}'" for x1, x2 in data.items())
     conn.execute(q)
     return conn.fetchall()
 
 def all_client_phone(conn):
-    q = "SELECT email, first_name, last_name, p.phone FROM clients c  \
-        LEFT JOIN phones p ON c.id = p.client_id \
-        ORDER BY email"
+    q = "SELECT distinct(email), first_name, last_name, phone FROM clients c  \
+        LEFT JOIN phones p ON c.id = p.client_id"
     conn.execute(q)
     return conn.fetchall()
 
@@ -94,7 +93,9 @@ with psycopg2.connect(database="c_db3", user="postgres", password="openBD") as c
         delete_phone(c, '1', '+70007')
         xxx = all_client_phone(c)
         print(xxx)
-        xxx = find_client(c, last_name='y111')
+        xxx = find_client(c, phone='+70008')
+        print(xxx)
+        xxx = find_client(c, first_name='x2')
         print(xxx)
         conn.commit()
 conn.close()
